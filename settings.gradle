@@ -1,0 +1,5 @@
+rootProject.name = 'parking-api'
+include 'backend'
+include 'frontend'
+include 'backend'
+

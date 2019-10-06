@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "$PROJECT_NAME"
+  annotations:
+      f5controller.kubernetes.estpak.ee/provision: "true"
+      f5dnscontroller.kubernetes.estpak.ee/provision: "true"
+      app.kubernetes.estpak.ee: "$APPLICATION_HID_CI"
+spec:
+  selector:
+    app: "$PROJECT_NAME"
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8069
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "$PROJECT_NAME"
+  annotations:
+    app.kubernetes.estpak.ee: "$APPLICATION_HID_CI"
+  labels:
+    app: "$PROJECT_NAME"
+spec:
+  replicas: $REPLICA_COUNT
+  revisionHistoryLimit: 2
+  progressDeadlineSeconds: 180
+  selector:
+    matchLabels:
+      app: "$PROJECT_NAME"
+  strategy:
+      type: RollingUpdate
+  template:
+    metadata:
+      name: "$PROJECT_NAME"
+      labels:
+        app: "$PROJECT_NAME"
+    spec:
+      containers:
+        - name: "$PROJECT_NAME"
+          image: "$APP_IMAGE"
+          resources:
+            requests:
+              cpu: "$RESOURCE_CPU_REQUEST"
+              memory: "$RESOURCE_MEMORY_REQUEST"
+            limits:
+              cpu: "$RESOURCE_CPU_LIMIT"
+              memory: "$RESOURCE_MEMORY_LIMIT"
+          ports:
+            - containerPort: 8069
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /config
+              name: credentials
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: properties
+                  key: spring.profiles.active
+            - name: APPLICATION_CI
+              valueFrom:
+                configMapKeyRef:
+                  name: properties
+                  key: ci.name
+            - name: APPLICATION_HID_CI
+              valueFrom:
+                configMapKeyRef:
+                  name: properties
+                  key: hid.ci
+            - name: PLUMBR_APPNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: properties
+                  key: plumbr.appname
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          livenessProbe:
+            httpGet:
+              path: "/$PROJECT_NAME/health"
+              port: 8069
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/$PROJECT_NAME/health"
+              port: 8069
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+      volumes:
+        - name: credentials
+          secret:
+            secretName: credentials

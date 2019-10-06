@@ -1,0 +1,28 @@
+plugins {
+    id 'com.moowork.node' version '1.2.0'
+}
+
+rootProject.buildDir = 'build'
+
+node {
+    version = '10.16.3'
+    download = true
+}
+
+task build(type: NpmTask, dependsOn: npmInstall) {
+    inputs.file "package.json"
+    inputs.file "package-lock.json"
+    inputs.file "webpack.config.js"
+    inputs.dir "src"
+    outputs.dir rootProject.buildDir
+    outputs.cacheIf { true }
+
+    args = ['run', 'build', '--production']
+}
+
+task copyToBackend(type: Copy, dependsOn: build) {
+    description 'Copy frontend build folder to backend static resources.'
+    from './build'
+    include '**/*.*'
+    into '../backend/build/resources/main/static'
+}

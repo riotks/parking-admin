@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: parking-api
+  h2:
+    console:
+      enabled: true
+  #accesible via http://localhost:8069/parking-api/h2-console/
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+server:
+  port: 8069
+  servlet:
+    context-path: /parking-api/
+
+local:
+  datasource:
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: user
+    password: pass
+    driver-class-name: org.h2.Driver
+
+rest-template:
+  max-per-route-connections: 20
+  max-total-connections: 30
+  http-pool-timeout-ms: 10000
+  connection-request-timeout-ms: 30000
+  read-timeout-ms: 43000
+
+pricing:
+  timing:
+    daily-tariff: "07:00:00.000"
+    nightly-tariff: "19:00:00.000"
+  currency:
+    default: EUR
+  regular:
+    day-half-hour: 1.50
+    night-half-hour: 1.00
+  premium:
+    day-half-hour: 1.00
+    night-half-hour: 0.75
+    monthly-fee: 20
+    max-amount: 300

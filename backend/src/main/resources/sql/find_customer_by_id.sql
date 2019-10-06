@@ -1,0 +1,1 @@
+SELECT customer_type FROM customer where id = ?

@@ -1,0 +1,9 @@
+/.gradle/
+/.idea/
+/backend/gradle/wrapper/
+/gradle/wrapper/
+/backend/out/
+#node
+node_modules/
+npm-debug.log
+build/

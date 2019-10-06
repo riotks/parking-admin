@@ -1,0 +1,9 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: properties
+data:
+  spring.profiles.active: $SPRING_PROFILES_ACTIVE
+  ci.name: $APPLICATION_CI
+  hid.ci: $APPLICATION_HID_CI
+  plumbr.appname: $PLUMBR_APPNAME

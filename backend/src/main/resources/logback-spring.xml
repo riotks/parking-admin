@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <springProperty scope="context" name="ci.name" source="ci.name" defaultValue="APP-PARKINGAPI-DEMO"/>
+
+  <property name="logia.messages.max-length.enabled" value="true"/>
+  <property name="logia.messages.max-length.value" value="30000"/>
+  <property name="logia.messages.max-length.strategy" value="split"/>
+
+  <springProfile name="default">
+    <property name="logia.output.console.enabled" value="true"/>
+    <property name="logia.output.console.root-level" value="INFO"/>
+  </springProfile>
+
+  <springProfile name="dev, test, live">
+    <property name="logia.output.syslog.enabled" value="true"/>
+    <property name="logia.output.syslog.root-level" value="INFO"/>
+    <property name="logia.output.syslog.host" value="loki.estpak.ee"/>
+    <property name="logia.output.syslog.port" value="5140"/>
+    <property name="logia.output.syslog.facility" value="LOCAL4"/>
+    <property name="logia.output.syslog.structured-data.keys"
+              value="X-REQUEST-ID,
+                     request_remote_address,
+                     response_code,
+                     request_endpoint,
+                     request_method,
+                     process_name"
+    />
+  </springProfile>
+
+  <include resource="logia-logback-base.xml"/>
+
+</configuration>
