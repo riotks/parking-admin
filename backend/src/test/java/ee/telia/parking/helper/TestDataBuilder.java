@@ -130,6 +130,26 @@ public class TestDataBuilder {
         .build();
   }
 
+  public static ParkingRecords buildPremiumCustomerParkingRecords_504h() {
+    Customer customer = getPremiumCustomer();
+    Long customerId = customer.getId();
+    CustomerType customerType = customer.getCustomerType();
+
+    return ParkingRecords.builder()
+        .customer(customer)
+        .records(asList(
+            ParkingRecord.builder()
+                .id(21L)
+                .customerId(customerId)
+                .customerType(customerType)
+                .beginAt(OffsetDateTime.parse("2019-09-01T08:00Z"))
+                .endBy(OffsetDateTime.parse("2019-09-22T08:00Z"))
+                .status(COMPLETED)
+                .build()
+        ))
+        .build();
+  }
+
   public static Customer getRegularCustomer() {
     return Customer.builder()
         .id(123L)

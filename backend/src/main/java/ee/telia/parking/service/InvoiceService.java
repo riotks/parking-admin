@@ -69,7 +69,7 @@ public class InvoiceService {
     CustomerType currentCustomerStatus = parkingRecords.getCustomer().getCustomerType();
     if (CustomerType.PREMIUM.equals(currentCustomerStatus)) {
       invoiceSum = invoiceSum.add(pricePremiumMonthlyFee);
-      if (invoiceSum.compareTo(pricePremiumMaxAmount) > 1) {
+      if (pricePremiumMaxAmount.compareTo(invoiceSum) < 0) {
         invoiceSum = pricePremiumMaxAmount;
       }
     }
