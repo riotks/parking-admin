@@ -1,10 +1,15 @@
 Parking-API Readme
 ------------------
+Requirements:
+Java 11
+gradle
+nodejs
+yarn
 
-# Backend käivitus
+# Backend
 cd parking-api/backend/ && gradlew bootRun
 
-# Frontend käivitus
+# Frontend
 cd parking-api/frontend/ && yarn start
 
 
