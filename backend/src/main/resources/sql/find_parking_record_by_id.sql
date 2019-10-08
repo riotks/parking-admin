@@ -1,1 +1,3 @@
-SELECT * FROM parking_record where id = ?
+SELECT *
+FROM parking_record
+where id = ?;

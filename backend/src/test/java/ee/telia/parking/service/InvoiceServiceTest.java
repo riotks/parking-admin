@@ -56,7 +56,6 @@ public class InvoiceServiceTest {
 
   ParkingRecords regularParkingRecords = TestDataBuilder.buildRegularCustomerParkingRecords();
   ParkingRecords premiumParkingRecords = TestDataBuilder.buildPremiumCustomerParkingRecords();
-  ParkingRecords premiumParkingRecords_504h = TestDataBuilder.buildPremiumCustomerParkingRecords_504h();
 
   @Test
   public void generateInvoice_withRegularCustomerData() {
@@ -69,15 +68,9 @@ public class InvoiceServiceTest {
     Invoice invoice = invoiceService.generateInvoice(premiumParkingRecords);
     assertThat(invoice.getAmount(), is(BigDecimal.valueOf(38.25)));
   }
-
-  @Test
-  public void generateInvoice_withPremiumCustomerData_shouldAmountTo300() {
-    Invoice invoice = invoiceService.generateInvoice(premiumParkingRecords_504h);
-    assertThat(invoice.getAmount(), is(BigDecimal.valueOf(300)));
-  }
 /*
   @Test
-  public void generateInvoice_withPremiumCustomerData() {
+  public void generateInvoice_withRegCustomerData() {
     Invoice invoice = invoiceService.generateInvoice(premiumParkingRecords);
     assertThat(invoice.getAmount(), is(BigDecimal.valueOf(38.25)));
   }

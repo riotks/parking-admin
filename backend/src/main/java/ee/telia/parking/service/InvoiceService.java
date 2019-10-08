@@ -1,15 +1,21 @@
 package ee.telia.parking.service;
 
+import ee.telia.parking.domain.entity.Customer;
 import ee.telia.parking.domain.entity.Invoice;
 import ee.telia.parking.domain.entity.ParkingRecord;
 import ee.telia.parking.domain.entity.ParkingRecords;
 import ee.telia.parking.domain.type.CustomerType;
 import ee.telia.parking.helper.exception.CustomerParseException;
 import ee.telia.parking.helper.exception.ParkingTimeThresholdCrossedException;
+import ee.telia.parking.repository.InvoiceRepository;
+import ee.telia.parking.repository.ParkingRepository;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,11 +24,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class InvoiceService {
 
-  //if previously generated invoice not available
-  //private ParkingService parkingService;
-
+  private final InvoiceRepository invoiceRepository;
 
   @Value("${pricing.timing.daily-tariff}")
   @DateTimeFormat(iso = ISO.TIME)
@@ -48,13 +53,20 @@ public class InvoiceService {
   @Value("${pricing.currency.default}")
   private String currency;
 
-  public Invoice generateInvoice(ParkingRecords parkingRecords) throws CustomerParseException {
+  public Invoice findInvoice(Long invoiceId) {
+    return invoiceRepository.findInvoice(invoiceId);
+  }
 
-    //Use cases
-    //1) You can see personal parking info
-    //2) You can see personal invoices
-    //3) You can see invoice details
-    //4) The system will generate an invoice based on usage (this can be done with a button in the UI)
+  public List<Invoice> findCustomerInvoices(Long customerId, LocalDate fromDate,
+      LocalDate toDate) {
+    return invoiceRepository.findCustomerInvoices(customerId, fromDate, toDate);
+  }
+
+  public Invoice insertInvoice(ParkingRecords parkingRecords) {
+    return generateInvoice(parkingRecords);
+  }
+
+  public Invoice generateInvoice(ParkingRecords parkingRecords) throws CustomerParseException {
 
     BigDecimal invoiceSum = BigDecimal.ZERO;
     for (ParkingRecord record : parkingRecords.getRecords()) {
@@ -63,46 +75,39 @@ public class InvoiceService {
           record.getEndBy());
 
       invoiceSum = invoiceSum
-          .add(getInvoiceSumForCustomer(customerType, record, halfHoursParked, invoiceSum));
+          .add(getInvoiceSumForCustomer(customerType, record, halfHoursParked));
     }
 
-    CustomerType currentCustomerStatus = parkingRecords.getCustomer().getCustomerType();
+    Customer customer = parkingRecords.getCustomer();
+    CustomerType currentCustomerStatus = customer.getCustomerType();
     if (CustomerType.PREMIUM.equals(currentCustomerStatus)) {
       invoiceSum = invoiceSum.add(pricePremiumMonthlyFee);
-      if (pricePremiumMaxAmount.compareTo(invoiceSum) < 0) {
+      if (invoiceSum.compareTo(pricePremiumMaxAmount) > 1) {
         invoiceSum = pricePremiumMaxAmount;
       }
     }
 
     return Invoice.builder()
+        .customerId(customer.getId())
         .amount(invoiceSum)
         .currency(currency)
+        .created_at(OffsetDateTime.now())
         .build();
   }
 
   private BigDecimal getInvoiceSumForCustomer(CustomerType customerType, ParkingRecord record,
-      int halfHoursParked, BigDecimal invoiceSum) {
+      int halfHoursParked) {
     BigDecimal calculatedPrice = BigDecimal.ZERO;
     switch (customerType) {
       case REGULAR:
         calculatedPrice = getPriceAccordingToTimeOfDay(record, halfHoursParked,
             priceRegularDayHalfHour,
             priceRegularNightHalfHour);
-
-/*          record.setCalculatedPrice(
-            getPriceAccordingToTimeOfDay(record, halfHoursParked, priceRegularDayHalfHour,
-                priceRegularNightHalfHour));
-        pricedParkingRecords.getRecords().add(record);*/
         break;
       case PREMIUM:
         calculatedPrice = getPriceAccordingToTimeOfDay(record, halfHoursParked,
             pricePremiumDayHalfHour,
             pricePremiumNightHalfHour);
-
-/*          record.setCalculatedPrice(
-            getPriceAccordingToTimeOfDay(record, halfHoursParked, pricePremiumDayHalfHour,
-                pricePremiumNightHalfHour));
-        pricedParkingRecords.getRecords().add(record);*/
         break;
       default:
         throw new CustomerParseException("Incorrect Customer type: " + customerType.toString());
@@ -120,7 +125,6 @@ public class InvoiceService {
       throw new ParkingTimeThresholdCrossedException(
           "Parking overflowed into another tariff. beginAt= " + record.getBeginAt() + " endBy= "
               + record.getEndBy());
-      //TODO split hours and loop back here when time goes over the threshold for daily/nightly price
     }
   }
 

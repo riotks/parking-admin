@@ -1,5 +1,6 @@
 package ee.telia.parking.domain.entity;
 
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,8 @@ import java.math.BigDecimal;
 public class Invoice {
 
   private Long id;
-  private Long referenceNumber;
+  private Long customerId;
   private BigDecimal amount;
   private String currency;
+  private OffsetDateTime created_at;
 }

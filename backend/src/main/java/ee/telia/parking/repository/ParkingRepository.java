@@ -41,7 +41,7 @@ public class ParkingRepository {
   private String findParkingRecordByIdSql;
 
   @InjectFileContent("classpath:sql/find_parking_record_by_customer_and_dates.sql")
-  private String findParkingRecordByCustomerAndDateBetween;
+  private String findParkingRecordByCustomerAndDatesSql;
 
 
   public int insertParkingRecord(ParkingRecord parkingRecord) {
@@ -74,13 +74,19 @@ public class ParkingRepository {
 
   public List<ParkingRecord> findCustomerParkingRecords(Long customerId,
       LocalDate fromDate, LocalDate toDate) {
+    MapSqlParameterSource parameterSource = getMapSqlParameterSource(customerId, fromDate, toDate);
+    return namedParameterJdbcTemplate
+        .query(findParkingRecordByCustomerAndDatesSql, parameterSource,
+            new BeanPropertyRowMapper<ParkingRecord>(ParkingRecord.class));
+  }
+
+  private MapSqlParameterSource getMapSqlParameterSource(Long customerId, LocalDate fromDate,
+      LocalDate toDate) {
     MapSqlParameterSource parameterSource = new MapSqlParameterSource();
     parameterSource.addValue("customerId", customerId);
     parameterSource.addValue("fromDate", fromDate);
     parameterSource.addValue("toDate", toDate);
-    return namedParameterJdbcTemplate
-        .query(findParkingRecordByCustomerAndDateBetween, parameterSource,
-            new BeanPropertyRowMapper<ParkingRecord>(ParkingRecord.class));
+    return parameterSource;
   }
 
   private SqlParameterSource getSqlParameterSource(ParkingRecord parkingRecord) {

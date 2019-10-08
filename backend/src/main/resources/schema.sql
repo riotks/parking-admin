@@ -22,10 +22,9 @@ create table if not exists invoice
 (
     id            bigint not null,
     customer_id   bigint,
-    customer_type varchar(255),
-    status        varchar(255),
-    begin_at      timestamp,
-    end_by        timestamp,
+    amount          bigint,
+    currency        varchar(255),
+    created_at      timestamp,
     primary key (id)
 );
 

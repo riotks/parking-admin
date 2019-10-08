@@ -1,9 +1,13 @@
 package ee.telia.parking.repository;
 
 import ee.telia.parking.domain.entity.Customer;
+import ee.telia.parking.domain.type.CustomerType;
 import ee.telia.parking.helper.annotation.InjectFileContent;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import static org.springframework.dao.support.DataAccessUtils.requiredSingleResult;
@@ -24,6 +28,11 @@ public class CustomerRepository {
   public Customer getCustomer(Long id) {
     return requiredSingleResult(
         jdbcTemplate.query(findCustomerById, newInstance(Customer.class), id));
+  }
+
+  public CustomerType getCustomerType(Long id) {
+    return requiredSingleResult(
+        jdbcTemplate.query(getCustomerTypeById, newInstance(CustomerType.class), id));
   }
 
 }

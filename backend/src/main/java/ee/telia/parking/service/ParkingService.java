@@ -49,7 +49,7 @@ public class ParkingService {
   }
 
   CustomerType getCustomerType(Long customerId) {
-    return customerRepository.getCustomer(customerId).getCustomerType();
+    return customerRepository.getCustomerType(customerId);
   }
 
   ParkingRecord buildNewParkingRecord(Long customerId, CustomerType customerType) {
