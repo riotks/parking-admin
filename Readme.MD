@@ -10,7 +10,7 @@ yarn
 cd backend/ && gradlew bootRun
 
 # Frontend
-cd frontend/ && yarn start
+cd frontend/ && npm start
 
 
 
