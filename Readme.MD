@@ -7,10 +7,10 @@ nodejs
 yarn
 
 # Backend
-cd parking-api/backend/ && gradlew bootRun
+cd backend/ && gradlew bootRun
 
 # Frontend
-cd parking-api/frontend/ && yarn start
+cd frontend/ && yarn start
 
 
 
