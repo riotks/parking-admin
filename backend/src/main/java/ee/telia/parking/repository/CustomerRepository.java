@@ -32,7 +32,7 @@ public class CustomerRepository {
 
   public CustomerType getCustomerType(Long id) {
     return requiredSingleResult(
-        jdbcTemplate.query(getCustomerTypeById, newInstance(CustomerType.class), id));
+        jdbcTemplate.query(getCustomerTypeById, newInstance(Customer.class), id)).getCustomerType();
   }
 
 }
