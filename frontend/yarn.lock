@@ -3736,6 +3736,11 @@ domhandler@^2.3.0:
   dependencies:
     domelementtype "1"
 
+dompurify@^2.4.3:
+  version "2.4.7"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.4.7.tgz#277adeb40a2c84be2d42a8bcd45f582bfa4d0cfc"
+  integrity sha512-kxxKlPEDa6Nc5WJi+qRgPbOAbgTpSULL+vI3NUXsZMlkJxTqYI9wg5ZTay2sFrdZRWHPWNi+EdAhcJf81WtoMQ==
+
 domutils@1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/domutils/-/domutils-1.5.1.tgz#dcd8488a26f563d61079e48c9f7b7e32373682cf"
@@ -5002,6 +5007,11 @@ hosted-git-info@^2.1.4:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.4.tgz#44119abaf4bc64692a16ace34700fed9c03e2546"
   integrity sha512-pzXIvANXEFrc5oFFXRMkbLPQ2rXRoDERwDLyrcUxGhaZhgP54BBSl9Oheh7Vv0T090cszWBxPjkQQ5Sq1PbBRQ==
+
+hotscript@^1.0.12:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/hotscript/-/hotscript-1.0.13.tgz#6eb5de757e9b33444ffc22555e98dbc17fa31fb4"
+  integrity sha512-C++tTF1GqkGYecL+2S1wJTfoH6APGAsbb7PAWQ3iVIwgG/EFseAfEVOKFgAFq4yK3+6j1EjUD4UQ9dRJHX/sSQ==
 
 hpack.js@^2.1.6:
   version "2.1.6"
@@ -8653,13 +8663,15 @@ ra-language-english@^4.7.0:
     ra-core "^4.7.0"
 
 ra-ui-materialui@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/ra-ui-materialui/-/ra-ui-materialui-4.7.0.tgz#aa68df065efc8d5d9596ca119e1722a0146bdab1"
-  integrity sha512-sKNcFEldlltwRBOgxxBAMu7K/k3+7uoW2Dtq9EEhe64zqaZrnpQHx8igRLae4UZsiauDCrsPSoB/l/QJbuu4IQ==
+  version "4.14.5"
+  resolved "https://registry.yarnpkg.com/ra-ui-materialui/-/ra-ui-materialui-4.14.5.tgz#4b2979cba13d596f12c6f89a524ad7a31e36afd8"
+  integrity sha512-0I32C21NM62LCtIDrTG6r7jdJXAANuKxUunqd5FTsQpAmKeNMS4WgwYFkUPrtGGZFN0zUzWEaumVLpUTFUXj8Q==
   dependencies:
     autosuggest-highlight "^3.1.1"
     clsx "^1.1.1"
     css-mediaquery "^0.1.2"
+    dompurify "^2.4.3"
+    hotscript "^1.0.12"
     inflection "~1.12.0"
     jsonexport "^3.2.0"
     lodash "~4.17.5"
